@@ -8,7 +8,7 @@ import 'hardhat/console.sol';
 
 interface INFTMinter {
     function initialize(address _owner, address _NFT) external payable;
-    function mint(uint amount) external payable;
+    function mint(address NFT) external payable;
     function withdraw(uint256 tokenID, address to, address NFT) external;
 }
 
@@ -46,6 +46,21 @@ contract MinterFactory is Ownable{
             allClones[msg.sender].push(indenticalChild);
         }
     }
+
+    function preClone(uint256 amount) external {
+        for(uint256 i = 0; i < amount; i++){
+            address indenticalChild = minter.clone();
+            allClones[msg.sender].push(indenticalChild);
+        }
+    }
+
+    function batchMint(uint256 amount) external payable {
+        require(INFT(NFT).totalSupply() + amount <= INFT(NFT).MAX_SUPPLY(), "MinterFactory: amount exceeds");
+        require(INFT(NFT).tokenPrice() * amount <= msg.value);
+        for(uint256 i = 0; i < amount; i++){
+            INFTMinter(allClones[msg.sender][i]).mint{value: INFT(NFT).tokenPrice()}(NFT);
+        }
+    }    
 
     function batchWithdraw(uint256 amount, address to) external{
         uint256 balance = 0;

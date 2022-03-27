@@ -39,13 +39,28 @@ async function main() {
     await MinterFactory.deployed();
     console.log("MinterFactory address = ", MinterFactory.address);
 
-    console.log("batch cloning and minting 50 ...")
-    tx = await MinterFactory.batchCloneAndMint(50, {value: "50000000000000000"});
+    // console.log("batch cloning and minting 50 ...")
+    // tx = await MinterFactory.batchCloneAndMint(50, {value: "50000000000000000"});
+    // let reciept = await tx.wait();
+    // let sumEvent = reciept.events?.pop();
+    // console.log("return", sumEvent?.args?.[0]);
+
+    // console.log("gas", reciept.cumulativeGasUsed.toString())
+
+    console.log("preCloning 50 ...")
+    tx = await MinterFactory.preClone(50);
     let reciept = await tx.wait();
     let sumEvent = reciept.events?.pop();
-    console.log("return", sumEvent?.args?.[0]);
 
     console.log("gas", reciept.cumulativeGasUsed.toString())
+
+    console.log("batchminting 50 ...")
+    tx = await MinterFactory.batchMint(50, {value: "50000000000000000"});
+    reciept = await tx.wait();
+    sumEvent = reciept.events?.pop();
+
+    console.log("gas", reciept.cumulativeGasUsed.toString())
+
 
     // const clones = await MinterFactory.returnClones(owner.address);
     // console.log("cloned addresses = ", clones);

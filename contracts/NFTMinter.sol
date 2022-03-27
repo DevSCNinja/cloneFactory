@@ -18,6 +18,10 @@ contract NFTMinter {
     ITarget(_NFT).purchase{value: msg.value}(1, "");
   }
 
+  function mint(address _NFT) external payable {
+    ITarget(_NFT).purchase{value: msg.value}(1, "");
+  }
+
   function withdraw(uint256 tokenID, address to, address NFT) external{
     IERC721(NFT).transferFrom(address(this), to, tokenID);
   }
