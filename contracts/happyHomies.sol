@@ -38,7 +38,7 @@ contract happyHomies is ERC721A, Ownable, ReentrancyGuard {
     using Strings for uint256;
 
     // Constants //
-    uint256 constant MAX_SUPPLY = 10000;
+    uint256 public MAX_SUPPLY = 10000;
     uint256 public price = 0.001 ether;
     uint256 public maxMint = 2; 
     uint256 public maxPresaleMint = 1; 
@@ -87,7 +87,6 @@ contract happyHomies is ERC721A, Ownable, ReentrancyGuard {
 
     // Public sale minting function, max 2 per wallet
     function mintToken(uint256 quantity) external payable onlySaleActive nonReentrant() {
-      console.log("happyHomies: msg.sender = ", msg.sender);
         require(quantity <= maxMint, "You can not mint more than alowed");
         require(price * quantity == msg.value, "Wrong amout of ETH sent");
         require(publicsaleAddressMinted[msg.sender] + quantity <= maxMint, "Can only mint 2 per wallet");
